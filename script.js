@@ -14,53 +14,6 @@ const gravity = 0.5;
 c.fillStyle = 'red';
 c.fillRect(200, 100, 100, 100);
 
-//Sprite Class
-class Sprite {
-    //every sprite has a position
-    constructor({position, imageSrc}){
-        this.position = position;
-        this.image = new Image()
-        this.image.src = imageSrc //asign image to this .image
-    }
-
-    draw(){
-        if (!this.image){return} //if image is undefined (not loaded yet)
-        c.drawImage(this.image, this.position.x, this.position.y)
-    }
-
-    update() {
-        this.draw()
-    }
-}
-
-class Player{
-    constructor(position) {
-        this.position = position;
-        this.velocity = {
-            x: 0,
-            y: 1, //falling down by default
-        }
-        this.height = 100;
-    }
-
-    draw(){
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, 100, this.height);
-    }
-
-    update(){
-        this.draw();
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        //ensure player never goes below screen
-        if (this.position.y + this.height + this.velocity.y < canvas.height){ 
-            this.velocity.y += gravity;
-        }else{ 
-            this.velocity.y = 0;
-        }
-    }
-}
-
 const player = new Player({
     x:0,
     y:0,
