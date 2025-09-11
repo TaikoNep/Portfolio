@@ -42,6 +42,13 @@ const background = new Sprite ({
     imageSrc: './img/background.png',
 })
 
+/**
+ * 
+ */
+function physics(){
+        
+}
+
 /*
 function loops itself by continuously calling itself with 
 requestAnimationFrame

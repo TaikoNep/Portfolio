@@ -6,6 +6,14 @@ class Player{
             y: 1, //falling down by default
         }
         this.height = 100;
+
+        /*
+        direction; 
+        lastDirection;
+        friction;
+        acceleration;
+        turnAcceleration;
+        */
     }
 
     draw(){
@@ -24,4 +32,6 @@ class Player{
             this.velocity.y = 0;
         }
     }
+
+    
 }
