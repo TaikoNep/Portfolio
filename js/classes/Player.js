@@ -22,7 +22,7 @@ class Player{
      * -1 = left, 1 = right
      */
     previousDirection() {
-        if(direction == 1){
+        if(this.direction == 1){
             this.lastDirection = this.direction;
         }else{
             if (this.velocity.x < 0){
@@ -34,15 +34,23 @@ class Player{
     }
 
     /**
-     * updates the Player according to input
+     * processes the elements of a player: direction, velocity
      */
-    playerPhysics(){
+    playerPhysics(delta){
         if(keys.d.pressed){
-            direction = 1;
+            this.direction = 1;
         } else if(keys.a.pressed){
-            direction = -1;
+            this.direction = -1;
+            console.log(this.direction);
         }
+        this.previousDirection; //store previous direction
+        if(this.direction){ /*if the direction is 0 (false)*/
+            console.log("The direction is currently:" + this.direction);
+        } 
+
     }
+
+    
 
     draw(){
         c.fillStyle = 'red';

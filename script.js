@@ -70,6 +70,8 @@ function animate(){
     }else if(keys.a.pressed){
         player.velocity.x = -1;
     }
+
+    player.playerPhysics(60);
 }
 
 
@@ -111,3 +113,14 @@ window.addEventListener('keyup', (event) => {
             break
     }
 })
+
+function moveTowards(fromFloat, toFloat, delta){
+    if(fromFloat < 0){
+        
+    }
+    if(fromFloat + delta > toFloat){
+        return toFloat;
+    }else{
+        return fromFloat + delta;
+    }
+}
