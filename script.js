@@ -42,12 +42,7 @@ const background = new Sprite ({
     imageSrc: './img/background.png',
 })
 
-/**
- * 
- */
-function physics(){
-        
-}
+
 
 /*
 function loops itself by continuously calling itself with 
@@ -68,6 +63,7 @@ function animate(){
     player.update();
     player2.update();
 
+    
     player.velocity.x = 0; //stop moving if no keys are pressed
     if(keys.d.pressed) {
         player.velocity.x = 1;

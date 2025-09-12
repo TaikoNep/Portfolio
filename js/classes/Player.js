@@ -7,13 +7,41 @@ class Player{
         }
         this.height = 100;
 
-        /*
-        direction; 
-        lastDirection;
-        friction;
-        acceleration;
-        turnAcceleration;
-        */
+        
+        this.direction = 0; 
+        this.lastDirection = 1;
+        this.friction = 4000;
+        this.acceleration = 1500;
+        this.turnAcceleration = 8000;
+        
+    }
+
+    /**
+     * Gets the previous direction of the player
+     * returns an int representing the previous direction
+     * -1 = left, 1 = right
+     */
+    previousDirection() {
+        if(direction == 1){
+            this.lastDirection = this.direction;
+        }else{
+            if (this.velocity.x < 0){
+                this.lastDirection = -1;
+            }else if (this.velocity.x > 0){
+                this.lastDirection = 1;
+            }
+        }
+    }
+
+    /**
+     * updates the Player according to input
+     */
+    playerPhysics(){
+        if(keys.d.pressed){
+            direction = 1;
+        } else if(keys.a.pressed){
+            direction = -1;
+        }
     }
 
     draw(){
@@ -33,5 +61,7 @@ class Player{
         }
     }
 
+    
+        
     
 }
