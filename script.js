@@ -111,16 +111,27 @@ window.addEventListener('keyup', (event) => {
             //console.log("I'm moving left.");
             keys.a.pressed = false;
             break
+        case 'k':
+            console.log(moveTowards(-5, -10, -4));
+            break
     }
 })
 
 function moveTowards(fromFloat, toFloat, delta){
-    if(fromFloat < 0){
-        
-    }
-    if(fromFloat + delta > toFloat){
-        return toFloat;
-    }else{
+
+    //Move closer to "toFloat" regardless if fromFloat is bigger or not
+    if(fromFloat > toFloat){
+        if(fromFloat - delta < toFloat){
+            return toFloat;
+        }
+        return fromFloat - delta;
+    }else if (fromFloat < toFloat){
+        if(fromFloat + delta > toFloat){
+            return toFloat;
+        }
         return fromFloat + delta;
     }
+    
+    return 0;
+    
 }
