@@ -64,18 +64,39 @@ function animate(){
     player2.update();
 
     
-    player.velocity.x = 0; //stop moving if no keys are pressed
+    //player.velocity.x = 0; //stop moving if no keys are pressed
+    /*
     if(keys.d.pressed) {
         player.velocity.x = 1;
     }else if(keys.a.pressed){
         player.velocity.x = -1;
     }
+    */
 
-    player.playerPhysics(60);
+    player.physicsProcess(60);
 }
 
+function moveTowards(fromFloat, toFloat, delta){
 
-animate();
+    //Move closer to "toFloat" regardless if fromFloat is bigger or not
+    if(fromFloat > toFloat){
+        if(fromFloat - delta < toFloat){
+            return toFloat;
+        }
+        return fromFloat - delta;
+    }else if (fromFloat < toFloat){
+        if(fromFloat + delta > toFloat){
+            return toFloat;
+        }
+        return fromFloat + delta;
+    }
+    
+    return 0;
+    
+}
+
+//THIS GOES LAST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+animate(); 
 
 //event listeners
 
@@ -117,21 +138,3 @@ window.addEventListener('keyup', (event) => {
     }
 })
 
-function moveTowards(fromFloat, toFloat, delta){
-
-    //Move closer to "toFloat" regardless if fromFloat is bigger or not
-    if(fromFloat > toFloat){
-        if(fromFloat - delta < toFloat){
-            return toFloat;
-        }
-        return fromFloat - delta;
-    }else if (fromFloat < toFloat){
-        if(fromFloat + delta > toFloat){
-            return toFloat;
-        }
-        return fromFloat + delta;
-    }
-    
-    return 0;
-    
-}
