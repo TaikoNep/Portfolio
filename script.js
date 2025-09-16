@@ -46,11 +46,13 @@ const platformCollisions2D = [];
 for (let i = 0; i < platformCollisions.length; i += 179)
     platformCollisions2D.push(platformCollisions.slice(i, i + 179)); //Slices out the first 179 items then go to next iteration
 
+const platformCollisionBlocks = []
+
 platformCollisions2D.forEach((row, y) => {
     row.forEach((symbol, x) => {
         if(symbol === 131073){
             console.log('draw a block here')
-            collisionBlocks.push(
+            platformCollisionBlocks.push(
                 new CollisionBlock({
                     position: {
                         x: x * 16,
@@ -69,8 +71,11 @@ c.fillStyle = 'red';
 c.fillRect(200, 100, 100, 100);
 
 const player = new Player({
-    x:15,
-    y:0,
+    position: {
+        x:30,
+        y:0,
+    },
+    collisionBlocks,
 });
 
 // cotains all the keys that will be inputed with
@@ -110,6 +115,9 @@ function animate(){
     background.update()
     collisionBlocks.forEach((collisionBlock) => {
         collisionBlock.update()
+    })
+    platformCollisionBlocks.forEach((block) => {
+        block.update();
     })
     c.restore()
 
