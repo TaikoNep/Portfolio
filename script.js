@@ -9,18 +9,68 @@ const scaledCanvas = {
     height: canvas.height / 4
 }
 
+/**
+ * Creating sub Arrays within our floorCollision Array to loop through
+ * each row of titles
+ */
+const floorCollisions2D = [];
+for (let i = 0; i < floorCollisions.length; i += 179)
+    floorCollisions2D.push(floorCollisions.slice(i, i + 179)); //Slices out the first 179 items then go to next iteration
+
+console.log(floorCollisions2D);
+
+const collisionBlocks = [];
+/**
+ * For each item within floorCollisions2D, loop through each row's symbols
+ * Creates a 2D array
+ */
+floorCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if(symbol === 131073){
+            console.log('draw a block here')
+            collisionBlocks.push(
+                new CollisionBlock({
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                }))
+        }
+    })
+})
+
+/**
+ * 2D array for platform collision blocks
+ */
+const platformCollisions2D = [];
+for (let i = 0; i < platformCollisions.length; i += 179)
+    platformCollisions2D.push(platformCollisions.slice(i, i + 179)); //Slices out the first 179 items then go to next iteration
+
+platformCollisions2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if(symbol === 131073){
+            console.log('draw a block here')
+            collisionBlocks.push(
+                new CollisionBlock({
+                    position: {
+                        x: x * 16,
+                        y: y * 16,
+                    },
+                }))
+        }
+    })
+})
+
+console.log(collisionBlocks)
+
 const gravity = 0.5;
 
 c.fillStyle = 'red';
 c.fillRect(200, 100, 100, 100);
 
 const player = new Player({
-    x:0,
+    x:15,
     y:0,
-});
-const player2 = new Player({
-    x: 300,
-    y: 100,
 });
 
 // cotains all the keys that will be inputed with
@@ -39,7 +89,7 @@ const background = new Sprite ({
         x: 0,
         y: 0,
     },
-    imageSrc: './img/background.png',
+    imageSrc: './img/sonicStage.png',
 })
 
 
@@ -55,23 +105,19 @@ function animate(){
     c.fillRect(0, 0, canvas.width, canvas.height);
     
     c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
-    c.scale(4, 4)//scale image by 4 on the x and y axis
-    c.translate(0, -background.image.height + scaledCanvas.height); //Position canvas to the bottom left of the background image
+    //c.scale(2, 2)//scale image by 4 on the x and y axis
+    //c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
     background.update()
+    collisionBlocks.forEach((collisionBlock) => {
+        collisionBlock.update()
+    })
     c.restore()
 
+    
+
     player.update();
-    player2.update();
 
     
-    //player.velocity.x = 0; //stop moving if no keys are pressed
-    /*
-    if(keys.d.pressed) {
-        player.velocity.x = 1;
-    }else if(keys.a.pressed){
-        player.velocity.x = -1;
-    }
-    */
 
     player.physicsProcess(60);
 }
