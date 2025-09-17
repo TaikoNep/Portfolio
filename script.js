@@ -2,7 +2,7 @@ const canvas = document.getElementById('myCanvas');
 const c = canvas.getContext('2d');
 
 canvas.width = 1024;
-canvas.height = 576;
+canvas.height = 512;
 
 const scaledCanvas = {
     width: canvas.width / 4,
@@ -72,10 +72,12 @@ c.fillRect(200, 100, 100, 100);
 
 const player = new Player({
     position: {
-        x:30,
+        x:50,
         y:0,
     },
     collisionBlocks,
+    imageSrc: "/img/sonic/Idle.png",
+    frameRate: 17,
 });
 
 // cotains all the keys that will be inputed with

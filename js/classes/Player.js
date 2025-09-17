@@ -1,12 +1,12 @@
-class Player{
-    constructor({position, collisionBlocks}) {
+class Player extends Sprite{
+    constructor({position, collisionBlocks, imageSrc, frameRate }) {
+        super({imageSrc, frameRate})
         this.position = position;
         this.velocity = {
             x: 0,
             y: 1, //falling down by default
         }
-        this.width = 25
-        this.height = 25;
+        
         this.collisionBlocks = collisionBlocks;
         
         this.direction = 0; 
@@ -62,14 +62,15 @@ class Player{
     }
 
     
-    
-
-    draw(){
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
 
     update(){
+        console.log(this.width)
+        console.log("x: " + this.position.x)
+        console.log("y: " + this.position.y)
+
+        c.fillStyle = 'rgba(0,255, 0, 0.2)'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        //console.log("green box should be visible")
         this.draw();
         this.position.x += this.velocity.x;
         this.checkForHorizontalCollisions(); //Apply before gravity
@@ -87,7 +88,7 @@ class Player{
                     object2: collisionBlock,
                 })
             ) {
-                //console.log('we are colliding')
+                console.log('we are colliding horizontally')
                 if(this.velocity.x > 0){
                     this.velocity.x = 0;
                     this.position.x = collisionBlock.position.x - this.width - 0.01;
@@ -120,7 +121,7 @@ class Player{
                     object2: collisionBlock,
                 })
             ) {
-                //console.log('we are colliding')
+                console.log('we are colliding vertically')
                 if(this.velocity.y > 0){
                     this.velocity.y = 0;
                     this.position.y = collisionBlock.position.y - this.height - 0.01;
