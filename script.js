@@ -110,8 +110,8 @@ function animate(){
     c.fillRect(0, 0, canvas.width, canvas.height);
     
     c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
-    //c.scale(2, 2)//scale image by 4 on the x and y axis
-    //c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
+    c.scale(2, 2)//scale image by 4 on the x and y axis
+    c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
     background.update()
     collisionBlocks.forEach((collisionBlock) => {
         collisionBlock.update()
@@ -119,15 +119,17 @@ function animate(){
     platformCollisionBlocks.forEach((block) => {
         block.update();
     })
+    player.update();
+    player.physicsProcess(60);
     c.restore()
 
     
 
-    player.update();
+    
 
     
 
-    player.physicsProcess(60);
+    
 }
 
 function moveTowards(fromFloat, toFloat, delta){

@@ -5,8 +5,8 @@ class Player{
             x: 0,
             y: 1, //falling down by default
         }
-        this.width = 100
-        this.height = 100;
+        this.width = 25
+        this.height = 25;
         this.collisionBlocks = collisionBlocks;
         
         this.direction = 0; 
@@ -72,8 +72,35 @@ class Player{
     update(){
         this.draw();
         this.position.x += this.velocity.x;
+        this.checkForHorizontalCollisions(); //Apply before gravity
         this.applyGravity();
         this.checkForVerticalCollisions();
+    }
+
+    checkForHorizontalCollisions(){
+        for(let i = 0; i < this.collisionBlocks.length; i++){
+            const collisionBlock = this.collisionBlocks[i]
+
+            if(
+                collision({
+                    object1: this,
+                    object2: collisionBlock,
+                })
+            ) {
+                //console.log('we are colliding')
+                if(this.velocity.x > 0){
+                    this.velocity.x = 0;
+                    this.position.x = collisionBlock.position.x - this.width - 0.01;
+                    break
+                }
+
+                if(this.velocity.x < 0){
+                    this.velocity.x = 0;
+                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
+                    break //Speed up process by not having to continue loop
+                }
+            }
+        }
     }
 
     applyGravity(){
@@ -93,7 +120,18 @@ class Player{
                     object2: collisionBlock,
                 })
             ) {
-                console.log('we are colliding')
+                //console.log('we are colliding')
+                if(this.velocity.y > 0){
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y - this.height - 0.01;
+                    break
+                }
+
+                if(this.velocity.y < 0){
+                    this.velocity.y = 0;
+                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
+                    break
+                }
             }
         }
     }
