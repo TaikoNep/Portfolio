@@ -92,6 +92,11 @@ const player = new Player({
             frameRate: 6,
             frameBuffer: 25
         },
+        Jump: {
+            imageSrc: "/img/sonic/Jump.png",
+            frameRate: 6,
+            frameBuffer: 25
+        },
     },
 });
 
