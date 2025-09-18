@@ -77,7 +77,17 @@ const player = new Player({
     },
     collisionBlocks,
     imageSrc: "/img/sonic/Idle.png",
-    frameRate: 17,
+    frameRate: 1,
+    animations: {
+        Idle: {
+            imageSrc: "/img/sonic/Idle.png",
+            frameRate: 1,
+        },
+        Run: {
+            imageSrc: "/img/sonic/Idle.png",
+            frameRate: 1,
+        },
+    },
 });
 
 // cotains all the keys that will be inputed with

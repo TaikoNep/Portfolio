@@ -1,16 +1,19 @@
 //Sprite Class
 class Sprite {
     //every sprite has a position
-    constructor({position, imageSrc, frameRate = 1}){
+    constructor({position, imageSrc, frameRate = 1, frameBuffer = 80, scale = 1}){
         this.position = position;
+        this.scale = scale
         this.image = new Image()
         this.image.onload = () => {
-            this.width = this.image.width / this.frameRate
-            this.height = this.image.height
+            this.width = (this.image.width / this.frameRate) * this.scale
+            this.height = (this.image.height) * this.scale
         }
         this.image.src = imageSrc //asign image to this .image
         this.frameRate = frameRate
-
+        this.currentFrame = 0;
+        this.frameBuffer = frameBuffer;
+        this.elapsedFrames = 0;
     }
 
     //call this
@@ -19,7 +22,7 @@ class Sprite {
         //console.log(this.width)
         const cropbox = {
             position: {
-                x: 0,
+                x: this.currentFrame * this.image.width / this.frameRate,
                 y: 0,
             },
             width: this.image.width / this.frameRate,
@@ -39,5 +42,14 @@ class Sprite {
 
     update() {
         this.draw()
+        this.updateFrames()
+    }
+
+    updateFrames(){
+        this.elapsedFrames++
+        if(this.elapsedFrames % this.frameBuffer === 0){
+            if(this.currentFrame < this.frameRate - 1) this.currentFrame++
+                else this.currentFrame = 0
+        }
     }
 }

@@ -1,6 +1,6 @@
 class Player extends Sprite{
-    constructor({position, collisionBlocks, imageSrc, frameRate }) {
-        super({imageSrc, frameRate})
+    constructor({position, collisionBlocks, imageSrc, frameRate, scale = 1.5, animations }) {
+        super({imageSrc, frameRate, scale})
         this.position = position;
         this.velocity = {
             x: 0,
@@ -8,6 +8,24 @@ class Player extends Sprite{
         }
         
         this.collisionBlocks = collisionBlocks;
+        this.hitbox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            width: 10,
+            height: 10,
+        }
+
+        this.animations = animations
+
+        for (let key in this.animations){
+            const image = new Image()
+            image.src = this.animations[key].imageSrc
+            
+            this.animations[key].image = image
+
+        }
         
         this.direction = 0; 
         this.lastDirection = 1;
@@ -15,6 +33,17 @@ class Player extends Sprite{
         this.acceleration = 1500;
         this.turnAcceleration = 8000;
         this.speed = 1;
+    }
+
+    updateHitbox(){
+        this.hitbox = {
+            position: {
+                x: this.position.x + 2,
+                y: this.position.y + 2,
+            },
+            width: 10,
+            height: 10,
+        }
     }
 
     /**
@@ -64,13 +93,18 @@ class Player extends Sprite{
     
 
     update(){
-        console.log(this.width)
-        console.log("x: " + this.position.x)
-        console.log("y: " + this.position.y)
-
+        this.updateFrames()
+        this.updateHitbox()
+     
+        //draws out the image
         c.fillStyle = 'rgba(0,255, 0, 0.2)'
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
-        //console.log("green box should be visible")
+
+        c.fillStyle = 'rgba(255,0, 0, 0.2)'
+        c.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height)
+
+
+
         this.draw();
         this.position.x += this.velocity.x;
         this.checkForHorizontalCollisions(); //Apply before gravity
