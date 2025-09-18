@@ -1,5 +1,5 @@
 class Player extends Sprite{
-    constructor({position, collisionBlocks, imageSrc, frameRate, scale = 1.5, animations }) {
+    constructor({position, collisionBlocks, imageSrc, frameRate, scale = 1.5, animations,}) {
         super({imageSrc, frameRate, scale})
         this.position = position;
         this.velocity = {
@@ -24,7 +24,7 @@ class Player extends Sprite{
             image.src = this.animations[key].imageSrc
             
             this.animations[key].image = image
-
+            console.log(`Added key: ${key} to animations`)
         }
         
         this.direction = 0; 
@@ -33,6 +33,13 @@ class Player extends Sprite{
         this.acceleration = 1500;
         this.turnAcceleration = 8000;
         this.speed = 1;
+    }
+
+    switchSprite(key){
+        if(this.image === this.animations[key].image) return
+        this.image = this.animations[key].image
+        this.frameBuffer = this.animations[key].frameBuffer
+        this.frameRate = this.animations[key].frameRate
     }
 
     updateHitbox(){
@@ -69,20 +76,27 @@ class Player extends Sprite{
     physicsProcess(delta){
         if(keys.d.pressed){
             this.direction = 1;
+            //console.log(player.width)
+            player.switchSprite('Jog1')
+
         } else if(keys.a.pressed){
             this.direction = -1;
-            console.log(this.direction);
+            //console.log(this.direction);
         }else{
             this.direction = 0;
+            player.switchSprite("Idle")
         }
         this.previousDirection(); //store previous direction
 
         if(this.direction){ /*if the direction is not 0 (true)*/
-            console.log("The direction is currently:" + this.direction);
+            //console.log("The direction is currently:" + this.direction);
             if (this.direction * this.velocity.x < 0){ //if we want to go in the opposite direction, slow down by our turn acceleration
                 this.velocity.x = moveTowards(this.velocity.x, this.direction * this.speed, this.turnAcceleration * delta);
+                
             }else{ // if we want to continue moving in a direction, speed up by our acceleration
                 this.velocity.x = moveTowards(this.velocity.x, this.direction * this.speed, this.acceleration * delta);
+                //player.switchSprite('Jog1')
+
             }
         } else{ //if we have no direction(direction is 0/false), slow down by the amount of friction
             this.velocity.x = moveTowards(this.velocity.x, 0, this.friction * delta);
@@ -91,10 +105,12 @@ class Player extends Sprite{
     }
 
     
+    
 
     update(){
         this.updateFrames()
         this.updateHitbox()
+        //console.log(player.position.y);
      
         //draws out the image
         c.fillStyle = 'rgba(0,255, 0, 0.2)'
@@ -139,8 +155,9 @@ class Player extends Sprite{
     }
 
     applyGravity(){
-        this.position.y += this.velocity.y;
         this.velocity.y += gravity;
+        this.position.y += this.velocity.y;
+        
 
     }
         

@@ -9,6 +9,9 @@ const scaledCanvas = {
     height: canvas.height / 4
 }
 
+//check if sprites load
+var initialLoad = false;
+
 /**
  * Creating sub Arrays within our floorCollision Array to loop through
  * each row of titles
@@ -82,10 +85,12 @@ const player = new Player({
         Idle: {
             imageSrc: "/img/sonic/Idle.png",
             frameRate: 1,
+            frameBuffer: 3
         },
-        Run: {
-            imageSrc: "/img/sonic/Idle.png",
-            frameRate: 1,
+        Jog1: {
+            imageSrc: "/img/sonic/Jog1.png",
+            frameRate: 6,
+            frameBuffer: 25
         },
     },
 });
@@ -110,32 +115,59 @@ const background = new Sprite ({
 })
 
 
+/**
+ * function preloads files before animate is called
+ */
+
+const imageUrls = [
+    './img/sonicStage.png',
+    './img/sonic/Idle.png'
+]
+
+let loadedImages = 0;
+let loadedAllImages = false;
+const totalImages = imageUrls.length;
+
+function imageLoaded(){
+    loadedImages++;
+    if(loadedImages === totalImages){
+        console.log("All sprites preloaded!");
+        loadedAllImages = true;
+    }
+}
+
 
 /*
 function loops itself by continuously calling itself with 
 requestAnimationFrame
 */
 function animate(){
-    window.requestAnimationFrame(animate); //function loops itself by continuously calling itself with requestAnimationFrame
-    
-    c.fillStyle = 'white'; // clears canvas
-    c.fillRect(0, 0, canvas.width, canvas.height);
-    
-    c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
-    c.scale(2, 2)//scale image by 4 on the x and y axis
-    c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
-    background.update()
-    collisionBlocks.forEach((collisionBlock) => {
-        collisionBlock.update()
-    })
-    platformCollisionBlocks.forEach((block) => {
-        block.update();
-    })
-    player.update();
-    player.physicsProcess(60);
-    c.restore()
+        window.requestAnimationFrame(animate); //function loops itself by continuously calling itself with requestAnimationFrame
+        
+        //load all images before continuing
+        if(loadedAllImages === false){
+        }else{
 
-    
+        
+
+        c.fillStyle = 'white'; // clears canvas
+        c.fillRect(0, 0, canvas.width, canvas.height);
+        
+        c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
+        c.scale(2, 2)//scale image by 4 on the x and y axis
+        c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
+        background.update()
+        collisionBlocks.forEach((collisionBlock) => {
+            collisionBlock.update()
+        })
+        platformCollisionBlocks.forEach((block) => {
+            block.update();
+        })
+        player.update();
+        player.physicsProcess(60);
+        c.restore()
+
+    }
 
     
 
@@ -164,7 +196,21 @@ function moveTowards(fromFloat, toFloat, delta){
 }
 
 //THIS GOES LAST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+imageUrls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+    img.onload = imageLoaded;
+    img.onerror = () => console.error(`Failed to load image: ${url}`);
+    console.log(`loaded ${url}`)
+    
+});
+
+
 animate(); 
+
+
+
+
 
 //event listeners
 
@@ -185,6 +231,9 @@ window.addEventListener('keydown', (event) => {
             //console.log("I'm moving left.");
             player.velocity.y = -20;
             break
+        case 'k':
+            keys.d.pressed = true;
+            break
     }
 })
 
@@ -201,7 +250,7 @@ window.addEventListener('keyup', (event) => {
             keys.a.pressed = false;
             break
         case 'k':
-            console.log(moveTowards(-5, -10, -4));
+            keys.k.pressed = false;
             break
     }
 })
