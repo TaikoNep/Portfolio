@@ -142,6 +142,14 @@ function imageLoaded(){
 }
 
 
+const camera = {
+    position: {
+        x: 0,
+        y: 0,
+    },
+}
+
+
 /*
 function loops itself by continuously calling itself with 
 requestAnimationFrame
@@ -160,7 +168,7 @@ function animate(){
         
         c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
         c.scale(2, 2)//scale image by 4 on the x and y axis
-        c.translate(0, -background.image.height/3); //Position canvas to the bottom left of the background image
+        c.translate(camera.position.x, -background.image.height/3); //Position canvas to the bottom left of the background image
         background.update()
         collisionBlocks.forEach((collisionBlock) => {
             collisionBlock.update()
@@ -168,6 +176,7 @@ function animate(){
         platformCollisionBlocks.forEach((block) => {
             block.update();
         })
+        player.checkForHorizontalCanvasCollision()
         player.update();
         player.physicsProcess(60);
         c.restore()

@@ -19,6 +19,13 @@ class Player extends Sprite{
 
         this.animations = animations
 
+        this.direction = 0; 
+        this.lastDirection = 1;
+        this.friction = 4000;
+        this.acceleration = 1500;
+        this.turnAcceleration = 8000;
+        this.speed = 1;
+
         for (let key in this.animations){
             const image = new Image()
             image.src = this.animations[key].imageSrc
@@ -27,12 +34,16 @@ class Player extends Sprite{
             console.log(`Added key: ${key} to animations`)
         }
         
-        this.direction = 0; 
-        this.lastDirection = 1;
-        this.friction = 4000;
-        this.acceleration = 1500;
-        this.turnAcceleration = 8000;
-        this.speed = 1;
+        this.camerabox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            width: 200,
+            height: 80,
+        }
+
+        
     }
 
     switchSprite(key){
@@ -40,6 +51,45 @@ class Player extends Sprite{
         this.image = this.animations[key].image
         this.frameBuffer = this.animations[key].frameBuffer
         this.frameRate = this.animations[key].frameRate
+    }
+
+    updateCameraBox(){
+        this.camerabox = {
+        position: {
+            x: this.position.x - 75,
+            y: this.position.y - 25,
+        },
+        width: 200,
+        height: 100,
+        }
+    }
+
+    checkForHorizontalCanvasCollision(){
+        if (this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 2864){
+            this.velocity.x = 0;
+        }
+
+    }
+
+    shouldPanCameraToTheLeft({canvas, camera}){
+        const cameraboxRightSide = this.camerabox.position.x + this.camerabox.width
+        const scaledDownCanvasWidth = canvas.width/4
+
+        if(cameraboxRightSide >= 2864) return //greater than width of stage
+
+        if(cameraboxRightSide >= scaledDownCanvasWidth + Math.abs(camera.position.x)){
+            console.log('translate to the left')
+            camera.position.x -= this.velocity.x
+        }
+    }
+
+    shouldPanCameraToTheRight({canvas, camera}){
+       if (this.camerabox.position.x <= 0 ) return
+
+       if(this.camerabox.position.x <= Math.abs(camera.position.x)){
+            camera.position.x -= this.velocity.x
+
+       }
     }
 
     updateHitbox(){
@@ -78,10 +128,12 @@ class Player extends Sprite{
             this.direction = 1;
             //console.log(player.width)
             player.switchSprite('Jog1')
+            player.shouldPanCameraToTheLeft({canvas, camera})
 
         } else if(keys.a.pressed){
             this.direction = -1;
             //console.log(this.direction);
+            player.shouldPanCameraToTheRight({canvas, camera})
         }else{
             this.direction = 0;
             player.switchSprite("Idle")
@@ -110,6 +162,14 @@ class Player extends Sprite{
     update(){
         this.updateFrames()
         this.updateHitbox()
+        this.updateCameraBox()
+
+        c.fillStyle = 'rgba(0, 0, 255, 0.2)'
+        c.fillRect(
+            this.camerabox.position.x, 
+            this.camerabox.position.y, 
+            this.camerabox.width, 
+            this.camerabox.height)
         //console.log(player.position.y);
      
         //draws out the image
