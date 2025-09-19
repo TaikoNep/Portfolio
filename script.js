@@ -7,6 +7,17 @@ function openNewTab(){
     }
 }
 
+const linkZone1 = new LinkZone({
+    position: {
+        x: 312,
+        y: 350,
+    },
+    width: 50,
+    height: 50,
+    link: "./about.html"
+
+})
+
 
 
 
@@ -193,6 +204,7 @@ function animate(){
         player.checkForHorizontalCanvasCollision()
         player.update();
         player.physicsProcess(60);
+        linkZone1.draw()
         c.restore()
 
     }
