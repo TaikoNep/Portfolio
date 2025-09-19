@@ -114,7 +114,7 @@ platformCollisions2D.forEach((row, y) => {
 
 console.log(collisionBlocks)
 
-const gravity = 0.5;
+const gravity = 0.3;
 
 c.fillStyle = 'red';
 c.fillRect(200, 100, 100, 100);
