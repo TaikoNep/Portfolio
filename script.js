@@ -7,6 +7,10 @@ function openNewTab(){
     }
 }
 
+
+
+
+
 const canvas = document.getElementById('myCanvas');
 const c = canvas.getContext('2d');
 
@@ -88,21 +92,21 @@ const player = new Player({
         y:0,
     },
     collisionBlocks,
-    imageSrc: "/img/sonic/Idle.png",
+    imageSrc: "./img/sonic/Idle.png",
     frameRate: 1,
     animations: {
         Idle: {
-            imageSrc: "/img/sonic/Idle.png",
+            imageSrc: "./img/sonic/Idle.png",
             frameRate: 1,
             frameBuffer: 3
         },
         Jog1: {
-            imageSrc: "/img/sonic/Jog1.png",
+            imageSrc: "./img/sonic/Jog1.png",
             frameRate: 6,
             frameBuffer: 25
         },
         Jump: {
-            imageSrc: "/img/sonic/Jump.png",
+            imageSrc: "./img/sonic/Jump.png",
             frameRate: 6,
             frameBuffer: 25
         },
