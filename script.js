@@ -1,3 +1,12 @@
+function openNewTab(){
+    const url = document.getElementById('urlInput').value
+    if(url) {
+        window.open(url, '_blank');
+    }else{
+        alert('Please enter a URL.');
+    }
+}
+
 const canvas = document.getElementById('myCanvas');
 const c = canvas.getContext('2d');
 
@@ -142,10 +151,11 @@ function imageLoaded(){
 }
 
 
+const backgroundImageHeight = 960
 const camera = {
     position: {
         x: 0,
-        y: 0,
+        y: -backgroundImageHeight + scaledCanvas.height,
     },
 }
 
@@ -168,7 +178,7 @@ function animate(){
         
         c.save() //Whenever method c.scale is called, only run the code between c.save and c.restore
         c.scale(2, 2)//scale image by 4 on the x and y axis
-        c.translate(camera.position.x, -background.image.height/3); //Position canvas to the bottom left of the background image
+        c.translate(camera.position.x, camera.position.y); //Position canvas to the bottom left of the background image
         background.update()
         collisionBlocks.forEach((collisionBlock) => {
             collisionBlock.update()
@@ -232,6 +242,9 @@ animate();
 window.addEventListener('keydown', (event) => {
     //console.log(event)
     switch(event.key){
+        case 'Enter':
+            console.log("Enter pressed")
+            break
         //anything within this case will run when key is pressed
         case 'd':
             //console.log("I'm moving right.");
@@ -243,7 +256,10 @@ window.addEventListener('keydown', (event) => {
             break
         case 'w':
             //console.log("I'm moving left.");
-            player.velocity.y = -20;
+            player.velocity.y = -10;
+            break
+        case 's':
+            keys.s.pressed = true;
             break
         case 'k':
             keys.d.pressed = true;
@@ -265,6 +281,10 @@ window.addEventListener('keyup', (event) => {
             break
         case 'k':
             keys.k.pressed = false;
+            break
+        case 'p':
+            //keys.p.pressed = false;
+            console.log(player.position);
             break
     }
 })

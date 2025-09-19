@@ -20,11 +20,24 @@ class Player extends Sprite{
         this.animations = animations
 
         this.direction = 0; 
-        this.lastDirection = 1;
-        this.friction = 4000;
+        this.lastDirection = 0;
+        this.friction = 10000;
         this.acceleration = 1500;
-        this.turnAcceleration = 8000;
-        this.speed = 1;
+        this.turnAcceleration = 10000;
+        this.speed = 2;
+
+        //character states
+        this.idle = true;
+        this.looking = false;
+        this.moving = false;
+        this.jumping = false;
+
+        this.onFloor = false;
+
+        this.spinDashChargeTime = 0;
+        this.chargingSpinDash = false;
+        this.loadingSpinDash = false;
+        this.spinDashing = false;
 
         for (let key in this.animations){
             const image = new Image()
@@ -65,7 +78,9 @@ class Player extends Sprite{
     }
 
     checkForHorizontalCanvasCollision(){
-        if (this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 2864){
+        if (this.hitbox.position.x + this.hitbox.width + this.velocity.x >= 2864 ||
+            this.hitbox.position.x + this.velocity.x <= 0
+        ){
             this.velocity.x = 0;
         }
 
@@ -88,6 +103,26 @@ class Player extends Sprite{
 
        if(this.camerabox.position.x <= Math.abs(camera.position.x)){
             camera.position.x -= this.velocity.x
+
+       }
+    }
+
+    shouldPanCameraDown({canvas, camera}){
+       if (this.camerabox.position.y  + this.velocity.y <= 0 ) return
+
+       if(this.camerabox.position.y <= Math.abs(camera.position.y)){
+            camera.position.y -= this.velocity.y
+
+       }
+    }
+
+    shouldPanCameraUp({canvas, camera}){
+       if (this.camerabox.position.y  + this.camerabox.height + this.velocity.y >= backgroundImageHeight ) return
+
+        const scaledCanvasHeight = canvas.height /4
+       if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y)
+            + scaledCanvasHeight){
+            camera.position.y -= this.velocity.y
 
        }
     }
@@ -124,6 +159,10 @@ class Player extends Sprite{
      * processes the elements of a player: direction, velocity
      */
     physicsProcess(delta){
+
+        //flip sprite based on velocity
+
+
         if(keys.d.pressed){
             this.direction = 1;
             //console.log(player.width)
@@ -138,10 +177,20 @@ class Player extends Sprite{
             this.direction = 0;
             player.switchSprite("Idle")
         }
-        this.previousDirection(); //store previous direction
+        
 
-        if(this.direction){ /*if the direction is not 0 (true)*/
-            //console.log("The direction is currently:" + this.direction);
+        if(player.velocity.y < 0){
+            player.shouldPanCameraDown({camera, canvas})
+        } else if (player.velocity.y > 0){
+            player.shouldPanCameraUp({camera, canvas})
+        }
+
+        if(this.direction != 0 && !this.looking){ /*if the direction is not 0 (true)*/
+            this.previousDirection(); //store previous direction
+            this.idle = false;
+            this.moving = true;
+            
+            //MOVING RIGHT
             if (this.direction * this.velocity.x < 0){ //if we want to go in the opposite direction, slow down by our turn acceleration
                 this.velocity.x = moveTowards(this.velocity.x, this.direction * this.speed, this.turnAcceleration * delta);
                 
@@ -151,8 +200,16 @@ class Player extends Sprite{
 
             }
         } else{ //if we have no direction(direction is 0/false), slow down by the amount of friction
+            this.idle = true;
+            this.moving = false;
             this.velocity.x = moveTowards(this.velocity.x, 0, this.friction * delta);
         }
+
+        if(this.onFloor && !this.velocity.x){
+            this.moving = false;
+            this.idle = true;
+        }
+
 
     }
 
@@ -233,6 +290,8 @@ class Player extends Sprite{
                 })
             ) {
                 console.log('we are colliding vertically')
+                this.onFloor = true;
+
                 if(this.velocity.y > 0){
                     this.velocity.y = 0;
                     this.position.y = collisionBlock.position.y - this.height - 0.01;
