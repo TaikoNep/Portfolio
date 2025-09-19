@@ -159,7 +159,7 @@ const backgroundImageHeight = 960
 const camera = {
     position: {
         x: 0,
-        y: -backgroundImageHeight + scaledCanvas.height,
+        y: -289,
     },
 }
 
@@ -288,7 +288,9 @@ window.addEventListener('keyup', (event) => {
             break
         case 'p':
             //keys.p.pressed = false;
-            console.log(player.position);
+            //console.log(player.position);
+            console.log(player.camerabox.position.y)
+            console.log("Camera y:" + camera.position.y)
             break
     }
 })
