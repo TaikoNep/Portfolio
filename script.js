@@ -1,25 +1,47 @@
-function openNewTab(){
-    const url = document.getElementById('urlInput').value
-    if(url) {
-        window.open(url, '_blank');
-    }else{
-        alert('Please enter a URL.');
-    }
-}
+
 
 const linkZone1 = new LinkZone({
     position: {
         x: 312,
-        y: 350,
+        y: 301,
     },
-    width: 50,
-    height: 50,
-    link: "./about.html"
+    width: 100,
+    height: 100,
+    link: '/about.html'
 
 })
 
+const linkZone2 = new LinkZone({
+    position: {
+        x: 500,
+        y: 301,
+    },
+    width: 100,
+    height: 100,
+    link: '/projects.html'
 
+})
 
+const linkZones = [
+    linkZone1,
+    linkZone2
+]
+
+function loadZones(){
+    for (const zone of linkZones){
+        zone.draw()
+    }
+}
+
+function checkLinkZones(){
+    for (let i = 0; i < linkZones.length; i++)
+        if(linkZones[i].overlap() === true){
+            window.open(linkZones[i].link, "_blank");
+            console.log("This zone works")
+            break;
+        }
+    
+}
 
 
 const canvas = document.getElementById('myCanvas');
@@ -204,7 +226,7 @@ function animate(){
         player.checkForHorizontalCanvasCollision()
         player.update();
         player.physicsProcess(60);
-        linkZone1.draw()
+        loadZones()
         c.restore()
 
     }
@@ -260,6 +282,7 @@ window.addEventListener('keydown', (event) => {
     switch(event.key){
         case 'Enter':
             console.log("Enter pressed")
+            checkLinkZones()
             break
         //anything within this case will run when key is pressed
         case 'd':

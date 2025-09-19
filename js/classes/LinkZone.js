@@ -8,8 +8,18 @@ class LinkZone{
     }
 
 
-
-
+    overlap(){
+        if(player.hitbox.position.x + player.hitbox.width >= this.position.x
+            && player.hitbox.position.x + player.hitbox.width <= this.position.x + this.width
+            && player.hitbox.position.y + player.hitbox.height <= this.position.y + this.height
+            && player.hitbox.position.y + player.hitbox.height >= this.position.y){
+            console.log("Inside Area");
+            return true;
+        }else{
+            console.log("Nope")
+            return false;
+        }
+    }
 
     draw(){
 

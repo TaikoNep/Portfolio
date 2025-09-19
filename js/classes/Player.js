@@ -93,7 +93,7 @@ class Player extends Sprite{
         if(cameraboxRightSide >= 2864) return //greater than width of stage
 
         if(cameraboxRightSide >= scaledDownCanvasWidth + Math.abs(camera.position.x)){
-            console.log('translate to the left')
+            //console.log('translate to the left')
             camera.position.x -= this.velocity.x
         }
     }
@@ -130,11 +130,11 @@ class Player extends Sprite{
     updateHitbox(){
         this.hitbox = {
             position: {
-                x: this.position.x + 2,
+                x: this.position.x + 8,
                 y: this.position.y + 2,
             },
-            width: 10,
-            height: 10,
+            width: 35,
+            height: 55,
         }
     }
 
@@ -240,8 +240,12 @@ class Player extends Sprite{
 
         this.draw();
         this.position.x += this.velocity.x;
+        this.updateHitbox()
+
         this.checkForHorizontalCollisions(); //Apply before gravity
         this.applyGravity();
+        this.updateHitbox()
+
         this.checkForVerticalCollisions();
     }
 
@@ -251,20 +255,24 @@ class Player extends Sprite{
 
             if(
                 collision({
-                    object1: this,
+                    object1: this.hitbox,
                     object2: collisionBlock,
                 })
             ) {
-                console.log('we are colliding horizontally')
+                //console.log('we are colliding horizontally')
                 if(this.velocity.x > 0){
                     this.velocity.x = 0;
-                    this.position.x = collisionBlock.position.x - this.width - 0.01;
+                    const offset = this.hitbox.position.x - this.position.x + this.hitbox.width
+
+                    this.position.x = collisionBlock.position.x - offset - 0.01;
                     break
                 }
 
                 if(this.velocity.x < 0){
                     this.velocity.x = 0;
-                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
+
+                    const offset = this.hitbox.position.x - this.position.x 
+                    this.position.x = collisionBlock.position.x + collisionBlock.width - offset + 0.01;
                     break //Speed up process by not having to continue loop
                 }
             }
@@ -285,22 +293,28 @@ class Player extends Sprite{
 
             if(
                 collision({
-                    object1: this,
+                    object1: this.hitbox,
                     object2: collisionBlock,
                 })
             ) {
-                console.log('we are colliding vertically')
+                //console.log('we are colliding vertically')
                 this.onFloor = true;
 
                 if(this.velocity.y > 0){
                     this.velocity.y = 0;
-                    this.position.y = collisionBlock.position.y - this.height - 0.01;
+
+                    const offset = this.hitbox.position.y - this.position.y + this.hitbox.height
+
+                    this.position.y = collisionBlock.position.y - offset - 0.01;
                     break
                 }
 
                 if(this.velocity.y < 0){
                     this.velocity.y = 0;
-                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
+
+                    const offset = this.hitbox.position.y - this.position.y 
+
+                    this.position.y = collisionBlock.position.y + collisionBlock.height - offset + 0.01;
                     break
                 }
             }
